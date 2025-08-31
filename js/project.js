@@ -13,10 +13,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //시간대별 html 파일 설정 =>배열,객체
   const time_background = [
-    { id: "sky", html: "sky.html", range: [6, 17] },
-    { id: "sky_dark", html: "sky_dark.html", range: [17, 20] },
-    { id: "night", html: "night.html", range: [20, 24] },
-    { id: "dawn", html: "sky_dark.html", range: [0, 6] },
+    { id: "sky", html: "https://shgmlwl.github.io/insta_background_sky/", range: [6, 17] },
+    { id: "sky_dark", html: "https://shgmlwl.github.io/insta_background/", range: [17, 20] },
+    { id: "night", html: "https://shgmlwl.github.io/insta_background_night/", range: [20, 24] },
+    { id: "dawn", html: "https://shgmlwl.github.io/insta_background/", range: [0, 6] },
   ];
   const pick_slot = (h) =>
     time_background.find((s) => h >= s.range[0] && h < s.range[1]);
