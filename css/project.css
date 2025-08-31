@@ -1,0 +1,494 @@
+@charset "utf-8";
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+html,
+body {
+  position: relative;
+  margin: 0;
+  height: 100vh;
+  /*  background: rgb(0, 0, 0); */
+  /*   overflow: hidden; */
+}
+
+/* 하늘 배경 */
+.background {
+  position: fixed;
+  inset: 0;
+  z-index: -1; /* 뒤로 가야하니까 */
+  overflow: hidden;
+}
+
+.sky_layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100vh;
+  border: 0;
+  /*  opacity: 0; */
+  transition: opacity 1.2s ease;
+  pointer-events: none; /* 배경은 클릭해도 뭐 없으니까 */
+}
+
+#layout {
+  max-width: 1440px;
+  /*  border: 1px solid blue; */
+  width: 100%;
+  margin: auto;
+  overflow: hidden;
+  /*   border: 1px solid red; */
+}
+
+/* time bar */
+#time {
+  position: fixed;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.28),
+    rgba(255, 255, 255, 0.16)
+  );
+  backdrop-filter: blur(10px) saturate(190%) brightness(0.95);
+  -webkit-backdrop-filter: blur(10px) saturate(110%) brightness(0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 2px 12px rgba(62, 62, 62, 0.06),
+    inset 0 1px rgba(255, 255, 255, 0.35);
+  padding: 10px 40px;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  display: flex;
+  z-index: 1;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 15px;
+  letter-spacing: 0.9px; /* 단위 추가 */
+  color: white;
+}
+#time > div {
+  width: 100px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+#icon {
+  width: 20px;
+  height: 20px;
+}
+#time > a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: auto;
+  justify-content: center;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+#img_collect {
+  height: 100vh;
+  display: flex;
+  perspective: 1000px; /* 입체 효과를 주려면 해당영역의 부모 요소에 줘야함 */
+  justify-content: center;
+  align-items: center;
+  /*   perspective-origin: 50% 40%; */
+}
+
+.cube:not(#cube_5, #cube_6) {
+  position: relative;
+  width: 300px; /* 가로(=깊이와 동일하면 정육면체) */
+  height: 400px; /* 세로 */
+  transform-style: preserve-3d;
+  transform: rotateX(0deg) rotateY(0deg);
+  transition: transform 0.6s ease;
+}
+
+#img_collect .cube_c {
+  position: absolute;
+  will-change: transform;
+  inset: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  transition: transform 0.5s ease;
+  transform-style: preserve-3d;
+  background: transparent; /* 이미지만 보이게 */
+  object-fit: contain;
+}
+#img_collect .cube_c:not(#cube_5):not(#cube_6) {
+  width: 300px;
+  height: 400px;
+}
+
+.cube_c > a > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  backface-visibility: hidden; /* 뒷면이 안보이게 */
+}
+.cube_c {
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.15);
+}
+/* 큐브 해시태그 */
+#follow_tag {
+  position: fixed;
+  left: 0;
+  top: 0;
+  transform: translate(12px, 18px);
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none; /* 호버 방해 금지 */
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+#follow_tag.show {
+  opacity: 1;
+}
+
+#follow_tag.show {
+  opacity: 1;
+}
+/* 유리 질감 */
+.cube_c.glass {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: inset 0 0 40px rgba(255, 255, 255, 0.06),
+    inset 0 0 1px rgba(255, 255, 255, 0.5), 0 18px 40px rgba(0, 0, 0, 0.25);
+}
+.cube_c.glass > a > img {
+  opacity: 0.9; /* 살짝 투명하게 */
+  filter: contrast(0.95) brightness(1.05);
+}
+
+/* 하이라이트(반짝) 오버레이 */
+:root {
+  --shineX: -60%;
+} /* GSAP로 이 값만 애니메이션 */
+.cube_c.glass::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: 0.55;
+  /* 움직이는 광택 스트립 + 부드러운 라이트 */
+  background: linear-gradient(
+      110deg,
+      rgba(255, 255, 255, 0.45) 0%,
+      rgba(255, 255, 255, 0.12) 12%,
+      rgba(255, 255, 255, 0) 35%
+    ),
+    radial-gradient(
+      120% 90% at 10% 10%,
+      rgba(255, 255, 255, 0.18),
+      transparent 60%
+    );
+  background-size: 200% 100%, cover;
+  background-position: var(--shineX) 0, center;
+  border-radius: 2px;
+}
+
+/* 회전 3d 배치 - 기본(300px 기준) */
+#cube_1 {
+  transform: translateZ(220px);
+} /* 300 * 11/15 = 220 */
+#cube_2 {
+  transform: rotateY(180deg) translateZ(220px);
+}
+#cube_3 {
+  transform: rotateY(90deg) translateZ(220px);
+}
+#cube_4 {
+  transform: rotateY(-90deg) translateZ(220px);
+}
+
+#cube_5 {
+  width: 300px;
+  height: 300px;
+  transform: rotateX(90deg) translateZ(260px);
+} /* 300 * 13/15 = 260 */
+#cube_6 {
+  width: 300px;
+  height: 300px;
+  transform: rotateX(-90deg) translateZ(260px);
+}
+
+/* ====================================== */
+/* 반응형 */
+/* 최소 1800px ~ (width = 360) */
+@media (min-width: 1800px) {
+  #time {
+    font-size: 19px;
+  }
+
+  .cube {
+    width: 420px;
+    height: 560px;
+  }
+
+  #img_collect .cube_c:not(#cube_5):not(#cube_6) {
+    width: 420px;
+    height: 560px;
+  }
+
+  /* 깊이(앞/뒤/좌/우) = 360 * 11/15 = 264 */
+  #cube_1 {
+    transform: translateZ(308px);
+  }
+  #cube_2 {
+    transform: rotateY(180deg) translateZ(308px);
+  }
+  #cube_3 {
+    transform: rotateY(90deg) translateZ(308px);
+  }
+  #cube_4 {
+    transform: rotateY(-90deg) translateZ(308px);
+  }
+
+  /* 위/아래 면 = 420 x 420, 깊이 = 364 */
+  #cube_5,
+  #cube_6 {
+    width: 420px;
+    height: 420px;
+  }
+  #cube_5 {
+    transform: rotateX(90deg) translateZ(364px);
+  }
+  #cube_6 {
+    transform: rotateX(-90deg) translateZ(364px);
+  }
+}
+
+/* 최소 1500px ~ (width = 360) */
+@media (min-width: 1500px) {
+  #time {
+    font-size: 16px;
+  }
+
+  .cube {
+    width: 360px;
+    height: 480px;
+  }
+
+  #img_collect .cube_c:not(#cube_5):not(#cube_6) {
+    width: 360px;
+    height: 480px;
+  }
+
+  /* 깊이(앞/뒤/좌/우) = 360 * 11/15 = 264 */
+  #cube_1 {
+    transform: translateZ(264px);
+  }
+  #cube_2 {
+    transform: rotateY(180deg) translateZ(264px);
+  }
+  #cube_3 {
+    transform: rotateY(90deg) translateZ(264px);
+  }
+  #cube_4 {
+    transform: rotateY(-90deg) translateZ(264px);
+  }
+
+  /* 위/아래 면 폭 통일 + 깊이 = 360 * 13/15 = 312 */
+  #cube_5,
+  #cube_6 {
+    width: 360px;
+    height: 360px;
+  }
+  #cube_5 {
+    transform: rotateX(90deg) translateZ(312px);
+  }
+  #cube_6 {
+    transform: rotateX(-90deg) translateZ(312px);
+  }
+}
+
+/* ~1280px (width = 270) */
+@media (max-width: 1280px) {
+  #time {
+    font-size: 14px;
+  }
+
+  .cube {
+    width: 270px;
+    height: 360px;
+  }
+
+  #img_collect .cube_c:not(#cube_5):not(#cube_6) {
+    width: 270px;
+    height: 360px;
+  }
+
+  /* 깊이(앞/뒤/좌/우) = 270 * 11/15 = 198 */
+  #cube_1 {
+    transform: translateZ(198px);
+  }
+  #cube_2 {
+    transform: rotateY(180deg) translateZ(198px);
+  }
+  #cube_3 {
+    transform: rotateY(90deg) translateZ(198px);
+  }
+  #cube_4 {
+    transform: rotateY(-90deg) translateZ(198px);
+  }
+
+  /* 위/아래 면 폭 통일 + 깊이 = 270 * 13/15 = 234 */
+  #cube_5,
+  #cube_6 {
+    width: 270px;
+    height: 270px;
+  }
+  #cube_5 {
+    transform: rotateX(90deg) translateZ(234px);
+  }
+  #cube_6 {
+    transform: rotateX(-90deg) translateZ(234px);
+  }
+}
+
+/* ~1080px (width = 240) */
+@media (max-width: 1080px) {
+  #time {
+    font-size: 14px;
+  }
+
+  .cube {
+    width: 240px;
+    height: 320px;
+  }
+
+  #img_collect .cube_c:not(#cube_5):not(#cube_6) {
+    width: 240px;
+    height: 320px;
+  }
+
+  /* 깊이(앞/뒤/좌/우) = 240 * 11/15 = 176 */
+  #cube_1 {
+    transform: translateZ(176px);
+  }
+  #cube_2 {
+    transform: rotateY(180deg) translateZ(176px);
+  }
+  #cube_3 {
+    transform: rotateY(90deg) translateZ(176px);
+  }
+  #cube_4 {
+    transform: rotateY(-90deg) translateZ(176px);
+  }
+
+  /* 위/아래 면 폭 통일 + 깊이 = 240 * 13/15 = 208 */
+  #cube_5,
+  #cube_6 {
+    width: 240px;
+    height: 240px;
+  }
+  #cube_5 {
+    transform: rotateX(90deg) translateZ(208px);
+  }
+  #cube_6 {
+    transform: rotateX(-90deg) translateZ(208px);
+  }
+}
+
+/* ~640px (width = 210) */
+@media (max-width: 640px) {
+  #time {
+    font-size: 13px;
+    padding: 10px 30px;
+  }
+
+  .cube {
+    width: 210px;
+    height: 280px;
+  }
+
+  #img_collect .cube_c:not(#cube_5):not(#cube_6) {
+    width: 210px;
+    height: 280px;
+  }
+
+  /* 깊이(앞/뒤/좌/우) = 210 * 11/15 = 154 */
+  #cube_1 {
+    transform: translateZ(154px);
+  }
+  #cube_2 {
+    transform: rotateY(180deg) translateZ(154px);
+  }
+  #cube_3 {
+    transform: rotateY(90deg) translateZ(154px);
+  }
+  #cube_4 {
+    transform: rotateY(-90deg) translateZ(154px);
+  }
+
+  /* 위/아래 면 폭 통일 + 깊이 = 210 * 13/15 = 182 */
+  #cube_5,
+  #cube_6 {
+    width: 210px;
+    height: 210px;
+  }
+  #cube_5 {
+    transform: rotateX(90deg) translateZ(182px);
+  }
+  #cube_6 {
+    transform: rotateX(-90deg) translateZ(182px);
+  }
+}
+
+/* ~430px (width = 150) */
+@media (max-width: 430px) {
+  #time {
+    font-size: 12px;
+    padding: 8px 20px;
+  }
+
+  .cube {
+    width: 150px;
+    height: 200px;
+  }
+
+  #img_collect .cube_c:not(#cube_5):not(#cube_6) {
+    width: 150px;
+    height: 200px;
+  }
+
+  /* 깊이(앞/뒤/좌/우) = 150 * 11/15 = 110 */
+  #cube_1 {
+    transform: translateZ(110px);
+  }
+  #cube_2 {
+    transform: rotateY(180deg) translateZ(110px);
+  }
+  #cube_3 {
+    transform: rotateY(90deg) translateZ(110px);
+  }
+  #cube_4 {
+    transform: rotateY(-90deg) translateZ(110px);
+  }
+
+  /* 위/아래 면 폭 통일 + 깊이 = 150 * 13/15 = 130 */
+  #cube_5,
+  #cube_6 {
+    width: 150px;
+    height: 150px;
+  }
+  #cube_5 {
+    transform: rotateX(90deg) translateZ(130px);
+  }
+  #cube_6 {
+    transform: rotateX(-90deg) translateZ(130px);
+  }
+}
