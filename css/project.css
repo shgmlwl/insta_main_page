@@ -238,7 +238,7 @@ img {
 /* ~430px (width = 150) */
 @media (max-width: 430px) {
   #time {
-    font-size: 12px;
+    font-size: 10px; /* ↓ 살짝 축소 */
     padding: 8px 20px;
   }
 
@@ -334,14 +334,14 @@ img {
 /* ~1080px (width = 240) */
 @media (max-width: 1080px) {
   #time {
-    font-size: 12px;
+    font-size: 11px; /* 유지 */
   }
 
   #insta,
   #date,
   #pm,
   #clock {
-    font-size: 12px;
+    font-size: 11px; /* 유지 */
   }
 
   .cube {
@@ -384,14 +384,14 @@ img {
 /* ~1280px (width = 270) */
 @media (max-width: 1280px) {
   #time {
-    font-size: 18px;
+    font-size: 12px; /* 유지 */
   }
 
   #insta,
   #date,
   #pm,
   #clock {
-    font-size: 18px;
+    font-size: 12px; /* 유지 */
   }
 
   .cube {
@@ -433,14 +433,14 @@ img {
 }
 @media (min-width: 1281px) and (max-width: 1499px) {
   #time {
-    font-size: 19px;
+    font-size: 14px; /* ↑ 1200대(12px)보다 큼 */
   }
 
   #insta,
   #date,
   #pm,
   #clock {
-    font-size: 19px;
+    font-size: 14px; /* ↑ */
   }
 
   .cube {
@@ -483,13 +483,13 @@ img {
 /* 최소 1500px ~ (width = 360) */
 @media (min-width: 1500px) and (max-width: 1799px) {
   #time {
-    font-size: 20px;
+    font-size: 17px; /* ↓ 과했던 20px → 17px */
   }
   #insta,
   #date,
   #pm,
   #clock {
-    font-size: 20px;
+    font-size: 17px; /* ↓ */
   }
 
   .cube {
@@ -532,7 +532,7 @@ img {
 /* 최소 1800px ~ (width = 360) */
 @media (min-width: 1800px) {
   #time {
-    font-size: 21px;
+    font-size: 18px; /* ↓ 21px → 18px */
     height: 35px;
   }
 
@@ -540,7 +540,7 @@ img {
   #date,
   #pm,
   #clock {
-    font-size: 21px;
+    font-size: 18px; /* ↓ */
   }
   .cube {
     width: 420px;
